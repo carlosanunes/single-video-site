@@ -1,6 +1,6 @@
 # Introduction
 
-The problem I wanted to solve was how to share a (single) video without posting it to a streaming service or similar site, and without it being to easy for people to just save it, while still being easy for people to view it. After some searching I found multiple solutions to self host youtube clones, or similar video content management sites (e.g.: https://mediagoblin.org/, MediaCMS, Tube, etc.), but these were overkill. Ended up choosing a very light http server made for static websites (https://static-web-server.net/), Traefik to work as reverse proxy to provide HTTPS by leveragin Let's Enctrypt and the HLS protocol for video streaming. And in order for this to be easy to install and manage, docker contains for installation.
+The problem I wanted to solve was how to share a (single) video without posting it to a streaming service or similar site, and without it being too easy for people to just save it, while still being easy for people to view it. After some searching I found multiple solutions to self host youtube clones, or similar video content management sites (e.g.: https://mediagoblin.org/, MediaCMS, Tube, etc.), but these were overkill. Ended up choosing a very light http server made for static websites (https://static-web-server.net/), Traefik to work as reverse proxy to provide HTTPS by leveraging Let's Enctrypt, and the HLS protocol for video streaming. And in order for this to be easy to install and manage, docker containers for installation.
 
 This solution is so light it runs from a Raspberry Pi Zero.
 
@@ -25,7 +25,7 @@ E.g.: ffmpeg  -i video.mp4 -codec: copy -start_number 0 -hls_time 10 -hls_list_s
 
 ### Edit the docker-compose.yaml file
 
-Change the following lines in the yaml file:
+Change the following lines in the yaml file, so that they respectively have the site's base url and the base dns name:
 
 ``
       - SERVER_CORS_ALLOW_ORIGINS=<site base url> # site base url, example: https://foo.bar.com 
@@ -55,3 +55,8 @@ These ports are required to be opened to obtain the Let's Encrypt certificate an
 ## Start the docker
 
 On the first run, after starting the docker it will take a bit to for the certificate to be issued, so the site will not be immediately available.
+
+
+# Notes
+
+-I did this as simple as I could for my purposes. Quick changes can be made to the static-web-server docker image so that it requests simple authentication (https://static-web-server.net/configuration/environment-variables/#server_cache_control_headers), and also change the look and feel of the site so that it is more than just a page to serve a video.
