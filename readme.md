@@ -48,10 +48,10 @@ Add the e-mail for Let's Encrypt certificate in the traefik configuration by cha
 This empty acme.json file will be used to store certificate information.
 
 
-# Open ports 443 and 80
+## Open ports 443 and 80
 
 These ports are required to be opened to obtain the Let's Encrypt certificate and for normal operation.
 
-# Start the docker
+## Start the docker
 
 On the first run, after starting the docker it will take a bit to for the certificate to be issued, so the site will not be immediately available.
