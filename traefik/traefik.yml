@@ -1,0 +1,23 @@
+api:
+  dashboard: false
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: <e-mail address for certificate> # example: foo@bar.com
+      storage: acme.json
+#      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # when testing use staging
+      caServer: https://acme-v02.api.letsencrypt.org/directory
+      httpChallenge:
+        entryPoint: web

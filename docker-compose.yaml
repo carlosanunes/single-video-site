@@ -1,0 +1,41 @@
+services:
+  traefik:
+    image: traefik:v2.9
+    command:
+      - --configFile=/etc/traefik/traefik.yml
+#      - --log.level=DEBUG # optional
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik/acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/certificates:/letsencrypt
+    networks:
+      - web
+
+  website:
+    image: joseluisq/static-web-server:2
+    environment:
+      # Note: those envs are customizable and optional
+      - SERVER_ROOT=/public
+      - SERVER_LOG_LEVEL=info
+      - SERVER_CORS_ALLOW_ORIGINS=<site base url> # site base url, example: https://foo.bar.com 
+    volumes:
+      - ./data:/public
+      # Or use an existing Docker volume
+      # - website_data:/public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.website.rule=Host(`<base dns name>`)" # replace with base dns name, example: foo.bar.com
+      - "traefik.http.routers.website.entrypoints=websecure"
+      - "traefik.http.routers.website.tls=true" #sets the service to use TLS
+      - "traefik.http.routers.website.tls.certresolver=letsencrypt"
+      - "traefik.http.services.website.loadbalancer.server.port=80"
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
